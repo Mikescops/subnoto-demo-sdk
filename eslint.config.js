@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import { fixupPluginRules } from "@eslint/compat";
 import tseslint from "typescript-eslint";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -11,8 +12,8 @@ export default tseslint.config(
     {
         files: ["**/*.{ts,tsx}"],
         plugins: {
-            react,
-            "react-hooks": reactHooks,
+            react: fixupPluginRules(react),
+            "react-hooks": fixupPluginRules(reactHooks),
         },
         languageOptions: {
             parserOptions: {
