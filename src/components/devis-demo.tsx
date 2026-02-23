@@ -276,7 +276,8 @@ export function DevisDemo() {
                 <div className="rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-elevated))] p-4 shadow-sm">
                     <h2 className="text-lg font-semibold tracking-tight text-[rgb(var(--color-text))]">Quote</h2>
                     <p className="mt-1 text-sm text-[rgb(var(--color-text-muted))]">
-                        Fill in the form. The PDF preview updates in real time. Send for signature with Smart Anchor positioning.
+                        Fill in the form. The PDF preview updates in real time. Send for signature with Smart Anchor
+                        positioning.
                     </p>
                     <button
                         type="button"
@@ -290,7 +291,10 @@ export function DevisDemo() {
                 <div className="rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-elevated))] p-4 shadow-sm">
                     <div className="grid gap-3">
                         <div>
-                            <label htmlFor="devis-quote-number" className="block text-xs font-medium text-[rgb(var(--color-text-muted))]">
+                            <label
+                                htmlFor="devis-quote-number"
+                                className="block text-xs font-medium text-[rgb(var(--color-text-muted))]"
+                            >
                                 Quote no.
                             </label>
                             <input
@@ -303,7 +307,10 @@ export function DevisDemo() {
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                             <div>
-                                <label htmlFor="devis-quote-date" className="block text-xs font-medium text-[rgb(var(--color-text-muted))]">
+                                <label
+                                    htmlFor="devis-quote-date"
+                                    className="block text-xs font-medium text-[rgb(var(--color-text-muted))]"
+                                >
                                     Date
                                 </label>
                                 <input
@@ -315,7 +322,10 @@ export function DevisDemo() {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="devis-validity-date" className="block text-xs font-medium text-[rgb(var(--color-text-muted))]">
+                                <label
+                                    htmlFor="devis-validity-date"
+                                    className="block text-xs font-medium text-[rgb(var(--color-text-muted))]"
+                                >
                                     Valid until
                                 </label>
                                 <input
@@ -328,7 +338,10 @@ export function DevisDemo() {
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="devis-client-name" className="block text-xs font-medium text-[rgb(var(--color-text-muted))]">
+                            <label
+                                htmlFor="devis-client-name"
+                                className="block text-xs font-medium text-[rgb(var(--color-text-muted))]"
+                            >
                                 Client
                             </label>
                             <input
@@ -341,7 +354,10 @@ export function DevisDemo() {
                             />
                         </div>
                         <div>
-                            <label htmlFor="devis-company" className="block text-xs font-medium text-[rgb(var(--color-text-muted))]">
+                            <label
+                                htmlFor="devis-company"
+                                className="block text-xs font-medium text-[rgb(var(--color-text-muted))]"
+                            >
                                 Company
                             </label>
                             <input
@@ -354,7 +370,10 @@ export function DevisDemo() {
                             />
                         </div>
                         <div>
-                            <label htmlFor="devis-address" className="block text-xs font-medium text-[rgb(var(--color-text-muted))]">
+                            <label
+                                htmlFor="devis-address"
+                                className="block text-xs font-medium text-[rgb(var(--color-text-muted))]"
+                            >
                                 Address
                             </label>
                             <input
@@ -367,7 +386,10 @@ export function DevisDemo() {
                             />
                         </div>
                         <div>
-                            <label htmlFor="devis-signer-email" className="block text-xs font-medium text-[rgb(var(--color-text-muted))]">
+                            <label
+                                htmlFor="devis-signer-email"
+                                className="block text-xs font-medium text-[rgb(var(--color-text-muted))]"
+                            >
                                 Signer email
                             </label>
                             <input
@@ -380,7 +402,10 @@ export function DevisDemo() {
                             />
                         </div>
                         <div>
-                            <label htmlFor="devis-vat" className="block text-xs font-medium text-[rgb(var(--color-text-muted))]">
+                            <label
+                                htmlFor="devis-vat"
+                                className="block text-xs font-medium text-[rgb(var(--color-text-muted))]"
+                            >
                                 VAT (%)
                             </label>
                             <input

@@ -13,7 +13,7 @@ export type CreateEnvelopeFromDevisPdfResult = { envelopeUuid: string; iframeUrl
  */
 export async function createEnvelopeFromDevisPdf(
     pdfBase64: string,
-    envelopeTitle: string,
+    envelopeTitle: string
 ): Promise<CreateEnvelopeFromDevisPdfResult> {
     const ctx = getClientAndWorkspace();
     if ("error" in ctx) return { error: ctx.error };

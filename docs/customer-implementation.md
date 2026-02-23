@@ -218,14 +218,14 @@ See `src/actions/mass-upload.ts` and `src/actions/create-one-envelope.ts` (share
 
 ## Summary
 
-| Goal            | Endpoint / method                                 | Reference in repo                    |
-| --------------- | ------------------------------------------------- | ------------------------------------ |
-| Create client   | `new SubnotoClient({ ... })`                      | `src/lib/subnoto-client.ts`          |
-| Upload document | `client.uploadDocument(...)`                      | `src/actions/create-one-envelope.ts` |
+| Goal                             | Endpoint / method                                                            | Reference in repo                      |
+| -------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------- |
+| Create client                    | `new SubnotoClient({ ... })`                                                 | `src/lib/subnoto-client.ts`            |
+| Upload document                  | `client.uploadDocument(...)`                                                 | `src/actions/create-one-envelope.ts`   |
 | Create from file (Smart Anchors) | `POST /public/envelope/create-from-file` (with `detectSmartAnchors: "true"`) | `src/actions/create-devis-envelope.ts` |
-| Add recipients  | `POST /public/envelope/add-recipients`            | same                                 |
-| Add blocks      | `POST /public/envelope/add-blocks`                | same                                 |
-| Send            | `POST /public/envelope/send`                      | same                                 |
-| Iframe token    | `POST /public/authentication/create-iframe-token` | `src/actions/iframe-token.ts`        |
-| Envelope status | `POST /public/envelope/get`                       | `src/actions/envelope-status.ts`     |
-| Mass create     | Loop over create flow + throttle                  | `src/actions/mass-upload.ts`         |
+| Add recipients                   | `POST /public/envelope/add-recipients`                                       | same                                   |
+| Add blocks                       | `POST /public/envelope/add-blocks`                                           | same                                   |
+| Send                             | `POST /public/envelope/send`                                                 | same                                   |
+| Iframe token                     | `POST /public/authentication/create-iframe-token`                            | `src/actions/iframe-token.ts`          |
+| Envelope status                  | `POST /public/envelope/get`                                                  | `src/actions/envelope-status.ts`       |
+| Mass create                      | Loop over create flow + throttle                                             | `src/actions/mass-upload.ts`           |

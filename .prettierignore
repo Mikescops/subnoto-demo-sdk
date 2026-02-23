@@ -1,0 +1,12 @@
+# Dependencies and build
+node_modules
+dist
+build
+.waku
+.next
+.turbo
+pnpm-lock.yaml
+
+# Generated
+*.min.js
+*.min.css
