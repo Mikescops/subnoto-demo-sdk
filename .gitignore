@@ -1,0 +1,24 @@
+# Env files with secrets – never commit
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Dependencies and build
+node_modules
+dist
+build
+.waku
+.next
+.turbo
+
+# OS and editor
+.DS_Store
+*.log
+*.tsbuildinfo
+
+# Optional: uncomment to ignore local IDE/coverage
+# coverage/
+# .idea/
+# .vscode/
