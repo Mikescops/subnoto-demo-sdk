@@ -12,7 +12,8 @@ import { SigningIframe } from "./signing-iframe";
 const UNSIGNED_STATUSES = ["draft", "uploading", "approving", "signing"];
 
 export const CreateAndSign = () => {
-    const [iframeUrl, setIframeUrl] = useState<string | null>(null);
+    const [iframeToken, setIframeToken] = useState<string | null>(null);
+    const [embedHost, setEmbedHost] = useState<string | null>(null);
     const [envelopeUuid, setEnvelopeUuid] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -64,7 +65,8 @@ export const CreateAndSign = () => {
             }
             saveEnvelope(result.envelopeUuid, result.signerEmail);
             setEnvelopeUuid(result.envelopeUuid);
-            setIframeUrl(result.iframeUrl);
+            setIframeToken(result.iframeToken);
+            setEmbedHost(result.host);
             setSavedUnsigned((prev) => [
                 ...prev.filter((e) => e.envelopeUuid !== result.envelopeUuid),
                 { envelopeUuid: result.envelopeUuid, status: "signing" },
@@ -84,7 +86,8 @@ export const CreateAndSign = () => {
                 return;
             }
             setEnvelopeUuid(uuid);
-            setIframeUrl(result.iframeUrl);
+            setIframeToken(result.iframeToken);
+            setEmbedHost(result.host);
         } finally {
             setOpeningUuid(null);
         }
@@ -102,7 +105,7 @@ export const CreateAndSign = () => {
 
     return (
         <div className="flex h-[calc(100vh-7rem)] flex-col">
-            {!iframeUrl ? (
+            {!iframeToken ? (
                 <CreateEnvelopeCard
                     loading={loading}
                     onCreate={handleCreate}
@@ -114,7 +117,13 @@ export const CreateAndSign = () => {
                     error={error}
                 />
             ) : (
-                <SigningIframe iframeUrl={iframeUrl} envelopeUuid={envelopeUuid} onCopy={handleCopy} copied={copied} />
+                <SigningIframe
+                    iframeToken={iframeToken}
+                    {...(embedHost !== null ? { host: embedHost } : {})}
+                    envelopeUuid={envelopeUuid}
+                    onCopy={handleCopy}
+                    copied={copied}
+                />
             )}
         </div>
     );

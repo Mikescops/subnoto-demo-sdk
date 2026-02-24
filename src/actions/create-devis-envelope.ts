@@ -1,11 +1,13 @@
 "use server";
 
 import { getClientAndWorkspace } from "../lib/subnoto-client.js";
-import { buildEmbedSignUrl } from "../lib/embed-url.js";
+import { EMBED_BASE_URL } from "../lib/embed-url.js";
 import { formatEnvelopeError } from "../lib/format-error.js";
 import { getOwnerEmail } from "./whoami.js";
 
-export type CreateEnvelopeFromDevisPdfResult = { envelopeUuid: string; iframeUrl: string } | { error: string };
+export type CreateEnvelopeFromDevisPdfResult =
+    | { envelopeUuid: string; iframeToken: string; host: string }
+    | { error: string };
 
 /**
  * Creates an envelope from a devis PDF buffer with Smart Anchor detection.
@@ -102,8 +104,8 @@ export async function createEnvelopeFromDevisPdf(
             return { error: msg ?? "Failed to create iframe token" };
         }
 
-        const iframeUrl = buildEmbedSignUrl(tokenData.iframeToken);
-        return { envelopeUuid, iframeUrl };
+        const iframeToken = tokenData.iframeToken;
+        return { envelopeUuid, iframeToken, host: EMBED_BASE_URL };
     } catch (err) {
         return {
             error: formatEnvelopeError(err, baseUrl),

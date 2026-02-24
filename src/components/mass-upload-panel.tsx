@@ -16,7 +16,8 @@ export function MassUploadPanel() {
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState<MassUploadItem[] | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [iframeUrl, setIframeUrl] = useState<string | null>(null);
+    const [iframeToken, setIframeToken] = useState<string | null>(null);
+    const [embedHost, setEmbedHost] = useState<string | null>(null);
     const [envelopeUuid, setEnvelopeUuid] = useState<string | null>(null);
     const [openingUuid, setOpeningUuid] = useState<string | null>(null);
 
@@ -46,18 +47,20 @@ export function MassUploadPanel() {
                 return;
             }
             setEnvelopeUuid(uuid);
-            setIframeUrl(result.iframeUrl);
+            setIframeToken(result.iframeToken);
+            setEmbedHost(result.host);
         } finally {
             setOpeningUuid(null);
         }
     };
 
     const handleCloseIframe = () => {
-        setIframeUrl(null);
+        setIframeToken(null);
+        setEmbedHost(null);
         setEnvelopeUuid(null);
     };
 
-    if (iframeUrl && envelopeUuid) {
+    if (iframeToken && envelopeUuid) {
         return (
             <div className="flex h-[calc(100vh-7rem)] flex-col">
                 <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-elevated))] px-4 py-2.5">
@@ -69,7 +72,11 @@ export function MassUploadPanel() {
                         ← Back to results
                     </button>
                 </div>
-                <SigningIframe iframeUrl={iframeUrl} envelopeUuid={envelopeUuid} />
+                <SigningIframe
+                    iframeToken={iframeToken}
+                    {...(embedHost !== null ? { host: embedHost } : {})}
+                    envelopeUuid={envelopeUuid}
+                />
             </div>
         );
     }

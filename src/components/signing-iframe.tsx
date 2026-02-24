@@ -1,15 +1,17 @@
 "use client";
 
+import { SignEmbed } from "@subnoto/embed-react";
 import { truncateUuid } from "../lib/uuid.js";
 
 type SigningIframeProps = {
-    iframeUrl: string;
+    iframeToken: string;
+    host?: string;
     envelopeUuid?: string | null;
     onCopy?: (text: string) => void;
     copied?: boolean;
 };
 
-export function SigningIframe({ iframeUrl, envelopeUuid, onCopy, copied = false }: SigningIframeProps) {
+export function SigningIframe({ iframeToken, host, envelopeUuid, onCopy, copied = false }: SigningIframeProps) {
     return (
         <div className="flex min-h-0 flex-1 flex-col">
             {envelopeUuid && (
@@ -39,12 +41,11 @@ export function SigningIframe({ iframeUrl, envelopeUuid, onCopy, copied = false 
                     </div>
                 </div>
             )}
-            <iframe
-                src={iframeUrl}
+            <SignEmbed
+                token={iframeToken}
+                {...(host !== undefined && host !== "" ? { host } : {})}
                 title="Subnoto signing"
-                className="min-h-0 w-full flex-1 border-0"
-                allow="fullscreen"
-                allowFullScreen
+                className="min-h-0 w-full flex-1"
             />
         </div>
     );

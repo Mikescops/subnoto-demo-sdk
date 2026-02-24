@@ -5,7 +5,7 @@ import { join } from "node:path";
 import type { SubnotoClient } from "@subnoto/api-client";
 import { getClientAndWorkspace } from "../lib/subnoto-client.js";
 import { getProjectRoot } from "../lib/env.js";
-import { buildEmbedSignUrl } from "../lib/embed-url.js";
+import { EMBED_BASE_URL } from "../lib/embed-url.js";
 import { formatEnvelopeError } from "../lib/format-error.js";
 import { getOwnerEmail } from "./whoami.js";
 
@@ -100,7 +100,9 @@ export async function createEnvelopeFromBuffer(
     }
 }
 
-export type CreateEnvelopeResult = { envelopeUuid: string; iframeUrl: string; signerEmail: string } | { error: string };
+export type CreateEnvelopeResult =
+    | { envelopeUuid: string; iframeToken: string; host: string; signerEmail: string }
+    | { error: string };
 
 export async function createEnvelopeAndEmbed(envelopeTitle = "Mass upload signing"): Promise<CreateEnvelopeResult> {
     const ctx = getClientAndWorkspace();
@@ -139,6 +141,6 @@ export async function createEnvelopeAndEmbed(envelopeTitle = "Mass upload signin
         return { error: msg ?? "Failed to create iframe token" };
     }
 
-    const iframeUrl = buildEmbedSignUrl(tokenData.iframeToken);
-    return { envelopeUuid, iframeUrl, signerEmail };
+    const iframeToken = tokenData.iframeToken;
+    return { envelopeUuid, iframeToken, host: EMBED_BASE_URL, signerEmail };
 }

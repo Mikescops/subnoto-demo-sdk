@@ -1,12 +1,15 @@
 "use server";
 
 import { getClientAndWorkspace } from "../lib/subnoto-client.js";
-import { buildEmbedSignUrl } from "../lib/embed-url.js";
+import { EMBED_BASE_URL } from "../lib/embed-url.js";
 import { getOwnerEmail } from "./whoami.js";
 
-export type GetIframeUrlResult = { iframeUrl: string } | { error: string };
+export type GetIframeTokenResult = { iframeToken: string; host: string } | { error: string };
 
-export async function getIframeUrlForEnvelope(envelopeUuid: string, signerEmail?: string): Promise<GetIframeUrlResult> {
+export async function getIframeUrlForEnvelope(
+    envelopeUuid: string,
+    signerEmail?: string
+): Promise<GetIframeTokenResult> {
     const ctx = getClientAndWorkspace();
     if ("error" in ctx) return { error: ctx.error };
     const { client, workspaceUuid } = ctx;
@@ -34,8 +37,7 @@ export async function getIframeUrlForEnvelope(envelopeUuid: string, signerEmail?
                       : "Failed to create iframe token";
             return { error: msg ?? "Failed to create iframe token" };
         }
-        const iframeUrl = buildEmbedSignUrl(tokenData.iframeToken);
-        return { iframeUrl };
+        return { iframeToken: tokenData.iframeToken, host: EMBED_BASE_URL };
     } catch (err) {
         console.error("[getIframeUrlForEnvelope] Error:", err);
         return {

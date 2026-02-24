@@ -13,3 +13,4 @@ Use this app to see how to integrate the Subnoto API and embed the signing flow 
 
 - [Getting started](getting-started.md) – Prerequisites, setup, env vars, and how to run each demo.
 - [Customer implementation](customer-implementation.md) – Step-by-step tutorial to implement the same logic on your side (API client, envelope creation, iframe token, status, mass creation).
+- [Embed library](embed-library.md) – How to use `@subnoto/embed-react` and the `SignEmbed` component to embed the signing UI in your React app.

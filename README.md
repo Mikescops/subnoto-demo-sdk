@@ -28,6 +28,7 @@ A **multi-demo** app for the Subnoto SDK and iframe embedding: create envelopes,
 - [docs/README.md](docs/README.md) – Doc index
 - [docs/getting-started.md](docs/getting-started.md) – Setup and run instructions
 - [docs/customer-implementation.md](docs/customer-implementation.md) – Tutorial to implement the same logic on your side (API client, envelope creation, iframe token, status, mass creation)
+- [docs/embed-library.md](docs/embed-library.md) – How to use the `@subnoto/embed-react` embed library and `SignEmbed` component
 - [CONTRIBUTING.md](CONTRIBUTING.md) – How to contribute and what to check before pushing
 
 ## Scripts

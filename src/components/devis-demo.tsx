@@ -106,7 +106,8 @@ export function DevisDemo() {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [sending, setSending] = useState(false);
-    const [iframeUrl, setIframeUrl] = useState<string | null>(null);
+    const [iframeToken, setIframeToken] = useState<string | null>(null);
+    const [embedHost, setEmbedHost] = useState<string | null>(null);
     const [envelopeUuid, setEnvelopeUuid] = useState<string | null>(null);
     const blobRef = useRef<Blob | null>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -234,14 +235,16 @@ export function DevisDemo() {
             }
             saveEnvelope(result.envelopeUuid);
             setEnvelopeUuid(result.envelopeUuid);
-            setIframeUrl(result.iframeUrl);
+            setIframeToken(result.iframeToken);
+            setEmbedHost(result.host);
         } finally {
             setSending(false);
         }
     }, [data]);
 
     const handleBack = useCallback(() => {
-        setIframeUrl(null);
+        setIframeToken(null);
+        setEmbedHost(null);
         setEnvelopeUuid(null);
     }, []);
 
@@ -253,7 +256,7 @@ export function DevisDemo() {
         );
     }
 
-    if (iframeUrl && envelopeUuid) {
+    if (iframeToken && envelopeUuid) {
         return (
             <div className="flex h-[calc(100vh-7rem)] flex-col">
                 <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-elevated))] px-4 py-2.5">
@@ -265,7 +268,11 @@ export function DevisDemo() {
                         ← Back to quote
                     </button>
                 </div>
-                <SigningIframe iframeUrl={iframeUrl} envelopeUuid={envelopeUuid} />
+                <SigningIframe
+                    iframeToken={iframeToken}
+                    {...(embedHost !== null ? { host: embedHost } : {})}
+                    envelopeUuid={envelopeUuid}
+                />
             </div>
         );
     }

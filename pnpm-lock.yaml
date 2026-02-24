@@ -17,6 +17,9 @@ importers:
       '@subnoto/api-client':
         specifier: ^2.6.0
         version: 2.6.0
+      '@subnoto/embed-react':
+        specifier: ^2.6.4
+        version: 2.6.4(react@19.2.4)
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -589,6 +592,11 @@ packages:
 
   '@subnoto/api-client@2.6.0':
     resolution: {integrity: sha512-HtTnx/9o5pCU5EoNbMu3HZ+aaRStYGx9N5U3XUvq574a1o8MIfzS84ob7avkyc8tPagEDsJCzuCClFHvV6C1NQ==}
+
+  '@subnoto/embed-react@2.6.4':
+    resolution: {integrity: sha512-B/UJVurlFJpBIfBrm1s9YZToBM/ZIUV9jya3NvndHifI9dsh15SzT8oMJlQCF0RCrs/1kU6oq+974HeqlsblcQ==}
+    peerDependencies:
+      react: '>=17.0.0'
 
   '@swc/helpers@0.5.19':
     resolution: {integrity: sha512-QamiFeIK3txNjgUTNppE6MiG3p7TdninpZu0E0PbqVh1a9FNLT2FRhisaa4NcaX52XVhA5l7Pk58Ft7Sqi/2sA==}
@@ -2656,6 +2664,10 @@ snapshots:
     dependencies:
       openapi-fetch: 0.17.0
       tough-cookie: 6.0.0
+
+  '@subnoto/embed-react@2.6.4(react@19.2.4)':
+    dependencies:
+      react: 19.2.4
 
   '@swc/helpers@0.5.19':
     dependencies:
