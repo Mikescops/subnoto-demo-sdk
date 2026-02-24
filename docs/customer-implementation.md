@@ -1,15 +1,15 @@
 # Customer implementation tutorial
 
-This guide walks through implementing the same logic on your side: setting up the API client, creating an envelope, embedding the signing iframe, and optionally checking status and doing mass creation.
+This guide explains how to implement the same flow on your side: set up the API client, create an envelope, embed the signing iframe, and optionally check status and run mass creation.
 
-Reference implementation in this repo:
+Reference code in this repo:
 
-- **Client & config** – `src/lib/subnoto-client.ts`, `src/lib/env.ts`
-- **Create one envelope** – `src/actions/create-one-envelope.ts`
-- **Create envelope from PDF with Smart Anchors (Devis)** – `src/actions/create-devis-envelope.ts`
-- **Iframe token** – `src/actions/iframe-token.ts`
-- **Envelope status** – `src/actions/envelope-status.ts`
-- **Mass upload** – `src/actions/mass-upload.ts`
+- **Client and config**: `src/lib/subnoto-client.ts`, `src/lib/env.ts`
+- **Create one envelope**: `src/actions/create-one-envelope.ts`
+- **Create envelope from PDF with Smart Anchors (Devis)**: `src/actions/create-devis-envelope.ts`
+- **Iframe token**: `src/actions/iframe-token.ts`
+- **Envelope status**: `src/actions/envelope-status.ts`
+- **Mass upload**: `src/actions/mass-upload.ts`
 
 ---
 
@@ -17,14 +17,14 @@ Reference implementation in this repo:
 
 **Environment variables**
 
-- `SUBNOTO_BASE_URL` – API base URL (e.g. `https://enclave.subnoto.com`)
-- `SUBNOTO_ACCESS_KEY` – API access key
-- `SUBNOTO_SECRET_KEY` – API secret key
-- `WORKSPACE_UUID` – Workspace UUID
+- `SUBNOTO_BASE_URL`: API base URL (e.g. `https://enclave.subnoto.com`)
+- `SUBNOTO_ACCESS_KEY`: API access key
+- `SUBNOTO_SECRET_KEY`: API secret key
+- `WORKSPACE_UUID`: Workspace UUID
 
 **API client**
 
-Install `@subnoto/api-client` and create the client where you run server-side code (e.g. Next.js server action, API route, or Node script):
+Install `@subnoto/api-client` and create the client in your server-side code (e.g. Next.js server action, API route, or Node script):
 
 ```ts
 import { SubnotoClient } from "@subnoto/api-client";
@@ -38,13 +38,13 @@ const client = new SubnotoClient({
 const workspaceUuid = process.env.WORKSPACE_UUID!;
 ```
 
-Validate that all four env vars are set before calling the API.
+Make sure all four env vars are set before calling the API.
 
 ---
 
 ## 4.2 Creating an envelope
 
-A full flow is: upload document → add recipients → add blocks (e.g. signature) → send.
+The flow is: upload document, add recipients, add blocks (e.g. signature), then send.
 
 **1. Upload document**
 
@@ -98,7 +98,7 @@ await client.POST("/public/envelope/add-blocks", {
 
 **4. Send**
 
-To send without email (e.g. when you will open the signing link yourself):
+To send without email (e.g. when you open the signing link yourself):
 
 ```ts
 await client.POST("/public/envelope/send", {
@@ -110,13 +110,13 @@ await client.POST("/public/envelope/send", {
 });
 ```
 
-See `src/actions/create-one-envelope.ts` for the full flow and error handling.
+Full flow and error handling: `src/actions/create-one-envelope.ts`.
 
 ---
 
 ## 4.2b Creating an envelope with Smart Anchors (Devis flow)
 
-If your PDF already contains **Smart Anchors** (e.g. `{{ signer@example.com | signature | 180 | 60 }}`), you can create an envelope without calling add-recipients or add-blocks: the API detects recipients and blocks from the PDF.
+If your PDF already contains **Smart Anchors** (e.g. `{{ signer@example.com | signature | 180 | 60 }}`), you can create an envelope without calling add-recipients or add-blocks. The API detects recipients and blocks from the PDF.
 
 **1. Create envelope from file with Smart Anchor detection**
 
@@ -134,11 +134,11 @@ const { data, error } = await client.POST("/public/envelope/create-from-file", {
 // data.envelopeUuid, data.documentUuid
 ```
 
-**2. Send** (same as above: `POST /public/envelope/send` with `distributionMethod: "none"`).
+**2. Send**: Same as above (`POST /public/envelope/send` with `distributionMethod: "none"`).
 
-**3. Create iframe token** (same as above: `POST /public/authentication/create-iframe-token` with `signerEmail` matching the anchor).
+**3. Create iframe token**: Same as above (`POST /public/authentication/create-iframe-token` with `signerEmail` matching the anchor).
 
-You do **not** call add-recipients or add-blocks. See `src/actions/create-devis-envelope.ts` and `src/components/devis-pdf-document.tsx` (anchor in the PDF).
+You do not call add-recipients or add-blocks. See `src/actions/create-devis-envelope.ts` and `src/components/devis-pdf-document.tsx` for the anchor in the PDF.
 
 ---
 
@@ -165,7 +165,7 @@ if (error || !data?.iframeToken) {
 
 **Build iframe URL**
 
-Base URL is typically `https://app.subnoto.com` (or your custom embed domain). Path is `/embeds/sign`. Token goes in the hash:
+Base URL is usually `https://app.subnoto.com` (or your custom embed domain). Path is `/embeds/sign`. Put the token in the hash:
 
 ```ts
 const embedBaseUrl = process.env.SUBNOTO_EMBED_BASE_URL ?? "https://app.subnoto.com";
@@ -193,11 +193,11 @@ const { data, error } = await client.POST("/public/envelope/get", {
 // data.status: "uploading" | "draft" | "approving" | "signing" | "complete" | "declined" | "canceled"
 ```
 
-Use this to show “draft”, “signing”, “complete”, etc. in your UI.
+Use this to show "draft", "signing", "complete", etc. in your UI.
 
 **Reopen an existing envelope in the iframe**
 
-Call the same create-iframe-token endpoint with the same `envelopeUuid` and `signerEmail`, then set the iframe `src` to the new URL. The signer can continue where they left off. See `src/actions/iframe-token.ts` and the “Open” flow in `src/components/create-and-sign.tsx`.
+Call the same create-iframe-token endpoint with the same `envelopeUuid` and `signerEmail`, then set the iframe `src` to the new URL. The signer can continue where they left off. See `src/actions/iframe-token.ts` and the "Open" flow in `src/components/create-and-sign.tsx`.
 
 ---
 
@@ -207,7 +207,7 @@ To create many envelopes (e.g. same PDF, different titles):
 
 1. Read the PDF once into a buffer.
 2. Loop for the desired count:
-    - Call the same “create envelope” steps (upload, add recipients, add blocks, send).
+    - Run the same "create envelope" steps (upload, add recipients, add blocks, send).
     - Optionally wait a short delay between calls (e.g. 200 ms) to avoid overloading the API.
     - Collect `envelopeUuid` (and optionally `documentUuid`, title) for each success; handle errors per item.
 3. Return the list of created envelopes (and any errors) to the client.
@@ -228,4 +228,4 @@ See `src/actions/mass-upload.ts` and `src/actions/create-one-envelope.ts` (share
 | Send                             | `POST /public/envelope/send`                                                 | same                                   |
 | Iframe token                     | `POST /public/authentication/create-iframe-token`                            | `src/actions/iframe-token.ts`          |
 | Envelope status                  | `POST /public/envelope/get`                                                  | `src/actions/envelope-status.ts`       |
-| Mass create                      | Loop over create flow + throttle                                             | `src/actions/mass-upload.ts`           |
+| Mass create                      | Loop over create flow and throttle                                           | `src/actions/mass-upload.ts`           |

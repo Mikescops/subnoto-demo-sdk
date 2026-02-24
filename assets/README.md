@@ -1,3 +1,3 @@
 # Sample assets
 
-Put `sample-multipage.pdf` here. It is used by the Create & Sign and Mass upload demos.
+Place `sample-multipage.pdf` in this folder. It is used by the Create & Sign and Mass upload demos.
