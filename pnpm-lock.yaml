@@ -5,7 +5,8 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  minimatch: '>=10.2.1'
+  minimatch: ^10.2.3
+  serialize-javascript@<=7.0.2: '>=7.0.3'
 
 importers:
 
@@ -15,11 +16,11 @@ importers:
         specifier: ^4.3.2
         version: 4.3.2(react@19.2.4)
       '@subnoto/api-client':
-        specifier: ^2.6.0
-        version: 2.6.0
+        specifier: ^2.6.5
+        version: 2.6.5
       '@subnoto/embed-react':
-        specifier: ^2.6.4
-        version: 2.6.4(react@19.2.4)
+        specifier: ^2.6.5
+        version: 2.6.5(react@19.2.4)
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -590,11 +591,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@subnoto/api-client@2.6.0':
-    resolution: {integrity: sha512-HtTnx/9o5pCU5EoNbMu3HZ+aaRStYGx9N5U3XUvq574a1o8MIfzS84ob7avkyc8tPagEDsJCzuCClFHvV6C1NQ==}
+  '@subnoto/api-client@2.6.5':
+    resolution: {integrity: sha512-1f+UQIHnwlHjPMbJTun5XHQvStkMbMCn0aFAwYyxnWEx7d/gIGBAPjCmiPrzyT7gp7HvnJL4t77HsLfvIWT+HA==}
 
-  '@subnoto/embed-react@2.6.4':
-    resolution: {integrity: sha512-B/UJVurlFJpBIfBrm1s9YZToBM/ZIUV9jya3NvndHifI9dsh15SzT8oMJlQCF0RCrs/1kU6oq+974HeqlsblcQ==}
+  '@subnoto/embed-react@2.6.5':
+    resolution: {integrity: sha512-uSDJz/7OCd5qUBM4VR9RLvl70+NNpGc/ZP9Ko+xCoTHOgCpdIz6IGqTVFVe8WbtEljXdsWKlT9Ih/rGVfEeZpQ==}
     peerDependencies:
       react: '>=17.0.0'
 
@@ -1641,8 +1642,8 @@ packages:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
 
-  minimatch@10.2.2:
-    resolution: {integrity: sha512-+G4CpNBxa5MprY+04MbgOw1v7So6n5JY166pFi9KfYwT78fxScCeSNQSNzp6dpPSW2rONOps6Ocam1wFhCgoVw==}
+  minimatch@10.2.4:
+    resolution: {integrity: sha512-oRjTw/97aTBN0RHbYCdtF1MQfvusSIBQM0IZEgzl6426+8jSC0nF1a/GmnVLpfB9yyr6g6FTqWqiZVbxrtaCIg==}
     engines: {node: 18 || 20 || >=22}
 
   ms@2.1.3:
@@ -1779,9 +1780,6 @@ packages:
   queue@6.0.2:
     resolution: {integrity: sha512-iHZWu+q3IdFZFX36ro/lKBkSvfkztY5Y7HMiPlOUjhupPcG2JMfst2KKEpu5XndviX/3UhFbRngUPNKtgvtZiA==}
 
-  randombytes@2.1.0:
-    resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
-
   react-dom@19.2.4:
     resolution: {integrity: sha512-AXJdLo8kgMbimY95O2aKQqsz2iWi9jMgKJhRBAxECE4IFxfcazB2LmzloIoibJI3C12IlY20+KFaLv+71bUJeQ==}
     peerDependencies:
@@ -1868,8 +1866,9 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  serialize-javascript@6.0.2:
-    resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
+  serialize-javascript@7.0.4:
+    resolution: {integrity: sha512-DuGdB+Po43Q5Jxwpzt1lhyFSYKryqoNjQSA9M92tyw0lyHIOur+XCalOUe0KTJpyqzT8+fQ5A0Jf7vCx/NKmIg==}
+    engines: {node: '>=20.0.0'}
 
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
@@ -2418,7 +2417,7 @@ snapshots:
     dependencies:
       '@eslint/object-schema': 3.0.2
       debug: 4.4.3
-      minimatch: 10.2.2
+      minimatch: 10.2.4
     transitivePeerDependencies:
       - supports-color
 
@@ -2660,12 +2659,12 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.59.0':
     optional: true
 
-  '@subnoto/api-client@2.6.0':
+  '@subnoto/api-client@2.6.5':
     dependencies:
       openapi-fetch: 0.17.0
       tough-cookie: 6.0.0
 
-  '@subnoto/embed-react@2.6.4(react@19.2.4)':
+  '@subnoto/embed-react@2.6.5(react@19.2.4)':
     dependencies:
       react: 19.2.4
 
@@ -2857,7 +2856,7 @@ snapshots:
       '@typescript-eslint/types': 8.56.0
       '@typescript-eslint/visitor-keys': 8.56.0
       debug: 4.4.3
-      minimatch: 10.2.2
+      minimatch: 10.2.4
       semver: 7.7.4
       tinyglobby: 0.2.15
       ts-api-utils: 2.4.0(typescript@5.9.3)
@@ -3398,7 +3397,7 @@ snapshots:
       estraverse: 5.3.0
       hasown: 2.0.2
       jsx-ast-utils: 3.3.5
-      minimatch: 10.2.2
+      minimatch: 10.2.4
       object.entries: 1.1.9
       object.fromentries: 2.0.8
       object.values: 1.2.1
@@ -3453,7 +3452,7 @@ snapshots:
       imurmurhash: 0.1.4
       is-glob: 4.0.3
       json-stable-stringify-without-jsonify: 1.0.1
-      minimatch: 10.2.2
+      minimatch: 10.2.4
       natural-compare: 1.4.0
       optionator: 0.9.4
     optionalDependencies:
@@ -3899,7 +3898,7 @@ snapshots:
     dependencies:
       mime-db: 1.52.0
 
-  minimatch@10.2.2:
+  minimatch@10.2.4:
     dependencies:
       brace-expansion: 5.0.3
 
@@ -4037,10 +4036,6 @@ snapshots:
     dependencies:
       inherits: 2.0.4
 
-  randombytes@2.1.0:
-    dependencies:
-      safe-buffer: 5.2.1
-
   react-dom@19.2.4(react@19.2.4):
     dependencies:
       react: 19.2.4
@@ -4163,9 +4158,7 @@ snapshots:
 
   semver@7.7.4: {}
 
-  serialize-javascript@6.0.2:
-    dependencies:
-      randombytes: 2.1.0
+  serialize-javascript@7.0.4: {}
 
   set-function-length@1.2.2:
     dependencies:
@@ -4312,7 +4305,7 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
-      serialize-javascript: 6.0.2
+      serialize-javascript: 7.0.4
       terser: 5.46.0
       webpack: 5.105.2
 
