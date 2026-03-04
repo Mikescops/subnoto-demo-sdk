@@ -18,6 +18,7 @@ export const CreateAndSign = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [signedMessage, setSignedMessage] = useState<string | null>(null);
     const [savedUnsigned, setSavedUnsigned] = useState<EnvelopeListItem[]>([]);
     const [loadingSaved, setLoadingSaved] = useState(true);
     const [hasSavedEnvelopes, setHasSavedEnvelopes] = useState(false);
@@ -103,6 +104,16 @@ export const CreateAndSign = () => {
         }
     };
 
+    const handleDocumentSigned = (payload: { envelopeUuid: string; completed: boolean }) => {
+        setSignedMessage(
+            payload.completed
+                ? "Document signed successfully. All signers have completed the envelope."
+                : "Your signature has been recorded. Other signers may still need to sign."
+        );
+        // Remove from saved unsigned list so it no longer appears as "reopen"
+        setSavedUnsigned((prev) => prev.filter((e) => e.envelopeUuid !== payload.envelopeUuid));
+    };
+
     return (
         <div className="flex h-[calc(100vh-7rem)] flex-col">
             {!iframeToken ? (
@@ -117,13 +128,32 @@ export const CreateAndSign = () => {
                     error={error}
                 />
             ) : (
-                <SigningIframe
-                    iframeToken={iframeToken}
-                    {...(embedHost !== null ? { host: embedHost } : {})}
-                    envelopeUuid={envelopeUuid}
-                    onCopy={handleCopy}
-                    copied={copied}
-                />
+                <div className="flex min-h-0 flex-1 flex-col gap-2">
+                    {signedMessage && (
+                        <div
+                            role="alert"
+                            className="flex shrink-0 items-center justify-between gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
+                        >
+                            <span>{signedMessage}</span>
+                            <button
+                                type="button"
+                                onClick={() => setSignedMessage(null)}
+                                className="shrink-0 rounded px-2 py-1 text-green-700 hover:bg-green-100"
+                                aria-label="Dismiss"
+                            >
+                                Dismiss
+                            </button>
+                        </div>
+                    )}
+                    <SigningIframe
+                        iframeToken={iframeToken}
+                        {...(embedHost !== null ? { host: embedHost } : {})}
+                        envelopeUuid={envelopeUuid}
+                        onCopy={handleCopy}
+                        copied={copied}
+                        onDocumentSigned={handleDocumentSigned}
+                    />
+                </div>
             )}
         </div>
     );

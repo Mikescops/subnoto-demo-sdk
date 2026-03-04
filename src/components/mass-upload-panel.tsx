@@ -4,6 +4,7 @@ import { useState } from "react";
 import { runMassUpload } from "../actions/mass-upload";
 import { getIframeUrlForEnvelope } from "../actions/iframe-token";
 import type { MassUploadItem } from "../actions/mass-upload";
+import { csvRow } from "../lib/csv-export";
 import { truncateUuid } from "../lib/uuid";
 import { SigningIframe } from "./signing-iframe";
 
@@ -58,6 +59,24 @@ export function MassUploadPanel() {
         setIframeToken(null);
         setEmbedHost(null);
         setEnvelopeUuid(null);
+    };
+
+    const handleExportCsv = () => {
+        if (!results || results.length === 0) return;
+        const headers = ["envelopeUuid", "documentUuid", "title", "status", "error"];
+        const rows = results.map((item) =>
+            "error" in item
+                ? csvRow(["", "", "", "error", item.error])
+                : csvRow([item.envelopeUuid, item.documentUuid, item.title, "success", ""])
+        );
+        const csv = [csvRow(headers), ...rows].join("\n");
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `mass-upload-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
     };
 
     if (iframeToken && envelopeUuid) {
@@ -143,9 +162,18 @@ export function MassUploadPanel() {
 
                 {results !== null && (
                     <div className="mt-6 border-t border-[rgb(var(--color-border))] pt-6">
-                        <h3 className="text-sm font-medium text-[rgb(var(--color-text))]">
-                            Results ({results.length})
-                        </h3>
+                        <div className="flex items-center justify-between gap-3">
+                            <h3 className="text-sm font-medium text-[rgb(var(--color-text))]">
+                                Results ({results.length})
+                            </h3>
+                            <button
+                                type="button"
+                                onClick={handleExportCsv}
+                                className="shrink-0 rounded-md border border-[rgb(var(--color-border))] bg-white px-3 py-1.5 text-xs font-medium text-[rgb(var(--color-text))] hover:bg-slate-50"
+                            >
+                                Export CSV
+                            </button>
+                        </div>
                         <ul className="mt-3 max-h-80 space-y-2 overflow-y-auto">
                             {results.map((item, index) =>
                                 "error" in item ? (

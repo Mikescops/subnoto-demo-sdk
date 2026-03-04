@@ -109,6 +109,7 @@ export function DevisDemo() {
     const [iframeToken, setIframeToken] = useState<string | null>(null);
     const [embedHost, setEmbedHost] = useState<string | null>(null);
     const [envelopeUuid, setEnvelopeUuid] = useState<string | null>(null);
+    const [signedMessage, setSignedMessage] = useState<string | null>(null);
     const blobRef = useRef<Blob | null>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -246,6 +247,15 @@ export function DevisDemo() {
         setIframeToken(null);
         setEmbedHost(null);
         setEnvelopeUuid(null);
+        setSignedMessage(null);
+    }, []);
+
+    const handleDocumentSigned = useCallback((payload: { envelopeUuid: string; completed: boolean }) => {
+        setSignedMessage(
+            payload.completed
+                ? "Document signed successfully. All signers have completed the envelope."
+                : "Your signature has been recorded. Other signers may still need to sign."
+        );
     }, []);
 
     if (data === null) {
@@ -268,11 +278,30 @@ export function DevisDemo() {
                         ← Back to quote
                     </button>
                 </div>
-                <SigningIframe
-                    iframeToken={iframeToken}
-                    {...(embedHost !== null ? { host: embedHost } : {})}
-                    envelopeUuid={envelopeUuid}
-                />
+                <div className="flex min-h-0 flex-1 flex-col gap-2">
+                    {signedMessage && (
+                        <div
+                            role="alert"
+                            className="flex shrink-0 items-center justify-between gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
+                        >
+                            <span>{signedMessage}</span>
+                            <button
+                                type="button"
+                                onClick={() => setSignedMessage(null)}
+                                className="shrink-0 rounded px-2 py-1 text-green-700 hover:bg-green-100"
+                                aria-label="Dismiss"
+                            >
+                                Dismiss
+                            </button>
+                        </div>
+                    )}
+                    <SigningIframe
+                        iframeToken={iframeToken}
+                        {...(embedHost !== null ? { host: embedHost } : {})}
+                        envelopeUuid={envelopeUuid}
+                        onDocumentSigned={handleDocumentSigned}
+                    />
+                </div>
             </div>
         );
     }

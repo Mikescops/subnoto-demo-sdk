@@ -1,7 +1,31 @@
 "use client";
 
+import { useEffect } from "react";
 import { SignEmbed } from "@subnoto/embed-react";
 import { truncateUuid } from "../lib/uuid.js";
+
+const DEFAULT_EMBED_ORIGIN = "https://app.subnoto.com";
+
+/**
+ * postMessage(message, "*") from the iframe is fine: the parent still receives the message.
+ * If you never get subnoto:documentSigned, the embed may be sending from a *nested* iframe
+ * (so the message goes to the embed's top frame, not to this window). The embed app must
+ * call window.parent.postMessage(...) from its top-level document, or forward the event.
+ */
+
+function normalizeOrigin(url: string): string {
+    return url.replace(/\/$/, "").toLowerCase();
+}
+
+function isEmbedDebugEnabled(): boolean {
+    return true;
+}
+
+export type DocumentSignedPayload = {
+    envelopeUuid: string;
+    completed: boolean;
+    workspaceUuid?: string;
+};
 
 type SigningIframeProps = {
     iframeToken: string;
@@ -9,9 +33,76 @@ type SigningIframeProps = {
     envelopeUuid?: string | null;
     onCopy?: (text: string) => void;
     copied?: boolean;
+    onDocumentSigned?: (payload: DocumentSignedPayload) => void;
 };
 
-export function SigningIframe({ iframeToken, host, envelopeUuid, onCopy, copied = false }: SigningIframeProps) {
+export function SigningIframe({
+    iframeToken,
+    host,
+    envelopeUuid,
+    onCopy,
+    copied = false,
+    onDocumentSigned,
+}: SigningIframeProps) {
+    const embedOrigin = host ?? DEFAULT_EMBED_ORIGIN;
+
+    useEffect(() => {
+        const expectedOrigin = normalizeOrigin(embedOrigin);
+        const debug = isEmbedDebugEnabled();
+        console.log("[Subnoto embed] listener attached", { expectedOrigin, debug });
+
+        const handleMessage = (event: MessageEvent) => {
+            const originNorm = normalizeOrigin(event.origin);
+
+            if (
+                debug &&
+                event.data &&
+                typeof event.data === "object" &&
+                (event.data.type !== undefined || originNorm === expectedOrigin)
+            ) {
+                console.log("[Subnoto embed] postMessage received", {
+                    origin: event.origin,
+                    type: event.data?.type,
+                    payload: event.data?.payload,
+                    fullData: event.data,
+                });
+            }
+
+            if (event.data?.type !== "subnoto:documentSigned") return;
+
+            const isLocalhost =
+                typeof window !== "undefined" &&
+                (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+            const originOk = originNorm === expectedOrigin || isLocalhost;
+
+            if (!originOk) {
+                if (debug) {
+                    console.warn(
+                        "[Subnoto embed] Ignored subnoto:documentSigned (origin mismatch). Expected:",
+                        expectedOrigin,
+                        "Got:",
+                        event.origin
+                    );
+                }
+                return;
+            }
+
+            const payload = event.data.payload;
+            if (payload && typeof payload.envelopeUuid === "string" && typeof payload.completed === "boolean") {
+                onDocumentSigned?.({
+                    envelopeUuid: payload.envelopeUuid,
+                    completed: payload.completed,
+                    workspaceUuid: typeof payload.workspaceUuid === "string" ? payload.workspaceUuid : undefined,
+                });
+            } else if (debug) {
+                console.warn("[Subnoto embed] subnoto:documentSigned received but invalid payload", event.data);
+            }
+        };
+
+        window.addEventListener("message", handleMessage);
+        return () => window.removeEventListener("message", handleMessage);
+    }, [embedOrigin, onDocumentSigned]);
+
     return (
         <div className="flex min-h-0 flex-1 flex-col">
             {envelopeUuid && (
