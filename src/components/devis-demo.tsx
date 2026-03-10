@@ -229,7 +229,7 @@ export function DevisDemo() {
             const buffer = await blob.arrayBuffer();
             const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
             const title = `Quote – ${data.clientName || data.quoteNumber}`;
-            const result = await createEnvelopeFromDevisPdf(base64, title);
+            const result = await createEnvelopeFromDevisPdf(base64, title, data.signerEmail);
             if ("error" in result) {
                 setError(result.error);
                 return;

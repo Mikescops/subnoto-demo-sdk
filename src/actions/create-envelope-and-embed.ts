@@ -160,6 +160,7 @@ export async function createEnvelopeAndEmbed(): Promise<CreateEnvelopeResult> {
                         email: signerEmail,
                         firstname: "Corentin",
                         lastname: "Subnoto",
+                        verificationType: "email",
                     },
                 ],
             },

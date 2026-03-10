@@ -36,6 +36,7 @@ export async function createEnvelopeFromBuffer(
                         email: signerEmail,
                         firstname: "Demo",
                         lastname: "Signer",
+                        verificationType: "email",
                     },
                 ],
             },

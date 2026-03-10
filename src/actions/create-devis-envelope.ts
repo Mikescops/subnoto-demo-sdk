@@ -1,9 +1,9 @@
 "use server";
 
+import type { UploadDocumentOptions } from "@subnoto/api-client";
 import { getClientAndWorkspace } from "../lib/subnoto-client.js";
 import { EMBED_BASE_URL } from "../lib/embed-url.js";
 import { formatEnvelopeError } from "../lib/format-error.js";
-import { getOwnerEmail } from "./whoami.js";
 
 export type CreateEnvelopeFromDevisPdfResult =
     | { envelopeUuid: string; iframeToken: string; host: string }
@@ -12,18 +12,16 @@ export type CreateEnvelopeFromDevisPdfResult =
 /**
  * Creates an envelope from a devis PDF buffer with Smart Anchor detection.
  * Does NOT call add-blocks; blocks come from Smart Anchors in the PDF.
+ * After creation, updates the auto-detected recipient to use verificationType "email".
  */
 export async function createEnvelopeFromDevisPdf(
     pdfBase64: string,
-    envelopeTitle: string
+    envelopeTitle: string,
+    signerEmail: string
 ): Promise<CreateEnvelopeFromDevisPdfResult> {
     const ctx = getClientAndWorkspace();
     if ("error" in ctx) return { error: ctx.error };
     const { client, workspaceUuid, baseUrl } = ctx;
-
-    const owner = await getOwnerEmail();
-    if ("error" in owner) return { error: owner.error };
-    const signerEmail = owner.email;
 
     let pdfBuffer: Buffer;
     try {
@@ -33,42 +31,34 @@ export async function createEnvelopeFromDevisPdf(
     }
 
     try {
-        const file = new Blob([new Uint8Array(pdfBuffer)], {
-            type: "application/pdf",
-        });
+        const uploadOptions: UploadDocumentOptions = {
+            workspaceUuid,
+            fileBuffer: pdfBuffer,
+            envelopeTitle,
+            detectSmartAnchors: "true",
+        };
+        const { envelopeUuid } = await client.uploadDocument(uploadOptions);
 
-        const { data, error: createError } = await client.POST("/public/envelope/create-from-file", {
+        const post = client as { POST: (path: string, opts: { body: object }) => Promise<{ error: unknown }> };
+        const { error: updateRecipientError } = await post.POST("/public/envelope/update-recipient", {
             body: {
                 workspaceUuid,
-                envelopeTitle,
-                file,
-                detectSmartAnchors: "true",
+                envelopeUuid,
+                email: signerEmail,
+                role: "signer",
+                updates: {
+                    verificationType: "email",
+                },
             },
-            bodySerializer: (b: {
-                workspaceUuid: string;
-                envelopeTitle: string;
-                file: Blob;
-                detectSmartAnchors: string;
-            }) => {
-                const formData = new FormData();
-                formData.append("workspaceUuid", b.workspaceUuid);
-                formData.append("envelopeTitle", b.envelopeTitle);
-                formData.append("file", b.file, "devis.pdf");
-                formData.append("detectSmartAnchors", b.detectSmartAnchors);
-                return formData;
-            },
-        } as Parameters<typeof client.POST>[1]);
-
-        if (createError || !data?.envelopeUuid || !data?.documentUuid) {
+        });
+        if (updateRecipientError) {
             const msg =
-                createError && typeof createError === "object" && createError !== null
-                    ? ((createError as { error?: { message?: string } }).error?.message ??
-                      (createError as { message?: string }).message)
-                    : String(createError ?? "Failed to create envelope");
-            return { error: msg ?? "Failed to create envelope" };
+                typeof updateRecipientError === "object" && updateRecipientError !== null
+                    ? ((updateRecipientError as { error?: { message?: string } }).error?.message ??
+                      (updateRecipientError as { message?: string }).message)
+                    : String(updateRecipientError);
+            return { error: msg ?? "Failed to update recipient" };
         }
-
-        const { envelopeUuid } = data;
 
         const { error: sendError } = await client.POST("/public/envelope/send", {
             body: {
