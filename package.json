@@ -15,8 +15,8 @@
     },
     "dependencies": {
         "@react-pdf/renderer": "^4.3.2",
-        "@subnoto/api-client": "^2.9.8",
-        "@subnoto/embed-react": "^2.9.8",
+        "@subnoto/api-client": "^2.11.0",
+        "@subnoto/embed-react": "^2.11.0",
         "dotenv": "^17.3.1",
         "react": "~19.2.4",
         "react-dom": "~19.2.4",

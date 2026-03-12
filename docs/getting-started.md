@@ -16,15 +16,17 @@
 
 2. **Environment variables**
 
-    Copy `.env.example` to `.env` in the project root and fill in your credentials. All variable names and optional ones are listed in `.env.example`. Required:
-    - `SUBNOTO_BASE_URL`: Subnoto API base URL (e.g. `https://enclave.subnoto.com`)
+    Copy `.env.example` to `.env` in the project root and fill in your credentials. All variable names and optional ones are listed in `.env.example`.     Required:
     - `SUBNOTO_ACCESS_KEY`: API access key
     - `SUBNOTO_SECRET_KEY`: API secret key
-    - `WORKSPACE_UUID`: Workspace UUID
 
     Optional:
+    - `SUBNOTO_BASE_URL`: Subnoto API base URL (SDK default: `https://enclave.subnoto.com`)
+    - `WORKSPACE_UUID`: Workspace UUID (required for envelope operations: create, status, iframe token, mass upload)
     - `SUBNOTO_EMBED_BASE_URL`: Base URL for the embed iframe (default: `https://app.subnoto.com`)
     - `SUBNOTO_UNATTESTED`: Set to `true` for unattested or dev usage if required
+
+    The SDK retries tunnel 401 errors (e.g. `TUNNEL_SESSION_NOT_FOUND`) automatically up to 3 times. See the [Subnoto error reference](https://subnoto.com/documentation/developers/reference/errors) for error codes and handling.
 
     The demo uses the API key owner email (from `/public/utils/whoami`) as the signer for Create & Sign and Mass upload envelopes.
 

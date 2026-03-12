@@ -39,7 +39,7 @@ export async function runMassUpload(options: { count: number; delayMs: number })
     if ("error" in owner) return { error: owner.error };
     const signerEmail = owner.email;
 
-    const fileBuffer = readFileSync(pdfPath) as Buffer;
+    const fileBuffer = readFileSync(pdfPath);
     const results: MassUploadItem[] = [];
 
     for (let i = 0; i < count; i++) {

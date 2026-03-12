@@ -17,10 +17,10 @@ Reference code in this repo:
 
 **Environment variables**
 
-- `SUBNOTO_BASE_URL`: API base URL (e.g. `https://enclave.subnoto.com`)
 - `SUBNOTO_ACCESS_KEY`: API access key
 - `SUBNOTO_SECRET_KEY`: API secret key
-- `WORKSPACE_UUID`: Workspace UUID
+- `SUBNOTO_BASE_URL`: (optional) API base URL; SDK default is `https://enclave.subnoto.com`
+- `WORKSPACE_UUID`: (optional) Workspace UUID; required for envelope operations (create, status, iframe token)
 
 **API client**
 
@@ -30,15 +30,16 @@ Install `@subnoto/api-client` and create the client in your server-side code (e.
 import { SubnotoClient } from "@subnoto/api-client";
 
 const client = new SubnotoClient({
-    apiBaseUrl: process.env.SUBNOTO_BASE_URL!,
     accessKey: process.env.SUBNOTO_ACCESS_KEY!,
     secretKey: process.env.SUBNOTO_SECRET_KEY!,
+    // apiBaseUrl is optional (default: https://enclave.subnoto.com)
+    ...(process.env.SUBNOTO_BASE_URL && { apiBaseUrl: process.env.SUBNOTO_BASE_URL }),
     unattested: process.env.SUBNOTO_UNATTESTED === "true", // if needed for dev
 });
 const workspaceUuid = process.env.WORKSPACE_UUID!;
 ```
 
-Make sure all four env vars are set before calling the API.
+Make sure `SUBNOTO_ACCESS_KEY` and `SUBNOTO_SECRET_KEY` are set. Set `WORKSPACE_UUID` for envelope operations. On tunnel 401 errors (`TUNNEL_SESSION_NOT_FOUND` or `TUNNEL_ERROR`), the SDK automatically invalidates the session and retries up to 3 times. See the [Subnoto error reference](https://subnoto.com/documentation/developers/reference/errors) for all error codes.
 
 ---
 

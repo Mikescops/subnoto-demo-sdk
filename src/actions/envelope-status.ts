@@ -1,8 +1,25 @@
 "use server";
 
+import { getErrorMessage } from "@subnoto/api-client";
 import { getClientAndWorkspace } from "../lib/subnoto-client.js";
 
-export type EnvelopeStatus = "uploading" | "draft" | "approving" | "signing" | "complete" | "declined" | "canceled";
+const ENVELOPE_STATUSES = [
+    "uploading",
+    "draft",
+    "approving",
+    "signing",
+    "complete",
+    "declined",
+    "canceled",
+] as const;
+
+export type EnvelopeStatus = (typeof ENVELOPE_STATUSES)[number];
+
+const ENVELOPE_STATUS_SET = new Set<string>(ENVELOPE_STATUSES);
+
+function isEnvelopeStatus(s: string): s is EnvelopeStatus {
+    return ENVELOPE_STATUS_SET.has(s);
+}
 
 export type GetEnvelopeStatusResult = { status: EnvelopeStatus } | { error: string };
 
@@ -12,19 +29,16 @@ export async function getEnvelopeStatus(envelopeUuid: string): Promise<GetEnvelo
     const { client, workspaceUuid } = ctx;
     try {
         const { data, error } = await client.POST("/public/envelope/get", {
-            body: { workspaceUuid, envelopeUuid },
+            body: { ...(workspaceUuid && { workspaceUuid }), envelopeUuid },
         });
         if (error || !data?.status) {
-            const msg =
-                error && typeof error === "object" && error !== null
-                    ? ((error as { error?: { message?: string } }).error?.message ??
-                      (error as { message?: string }).message)
-                    : error != null
-                      ? String(error)
-                      : "Envelope not found";
+            const msg = error != null ? getErrorMessage(error) : "Envelope not found";
             return { error: msg ?? "Failed to get envelope" };
         }
-        return { status: data.status as EnvelopeStatus };
+        if (!isEnvelopeStatus(data.status)) {
+            return { error: "Invalid envelope status" };
+        }
+        return { status: data.status };
     } catch (err) {
         console.error("[getEnvelopeStatus] Error:", err);
         return {

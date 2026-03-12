@@ -1,5 +1,6 @@
 "use server";
 
+import { getErrorMessage } from "@subnoto/api-client";
 import { getClientAndWorkspace } from "../lib/subnoto-client.js";
 import { EMBED_BASE_URL } from "../lib/embed-url.js";
 import { getOwnerEmail } from "./whoami.js";
@@ -22,19 +23,13 @@ export async function getIframeUrlForEnvelope(
     try {
         const { data: tokenData, error: tokenError } = await client.POST("/public/authentication/create-iframe-token", {
             body: {
-                workspaceUuid,
+                ...(workspaceUuid && { workspaceUuid }),
                 envelopeUuid,
                 signerEmail: email,
             },
         });
         if (tokenError || !tokenData?.iframeToken) {
-            const msg =
-                tokenError && typeof tokenError === "object" && tokenError !== null
-                    ? ((tokenError as { error?: { message?: string } }).error?.message ??
-                      (tokenError as { message?: string }).message)
-                    : tokenError != null
-                      ? String(tokenError)
-                      : "Failed to create iframe token";
+            const msg = tokenError != null ? getErrorMessage(tokenError) : "Failed to create iframe token";
             return { error: msg ?? "Failed to create iframe token" };
         }
         return { iframeToken: tokenData.iframeToken, host: EMBED_BASE_URL };

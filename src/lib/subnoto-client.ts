@@ -6,24 +6,23 @@ loadEnv();
 export function getClientAndWorkspace():
     | {
           client: SubnotoClient;
-          workspaceUuid: string;
-          baseUrl: string;
+          workspaceUuid?: string;
       }
     | { error: string } {
     const apiBaseUrl = process.env.SUBNOTO_BASE_URL;
     const accessKey = process.env.SUBNOTO_ACCESS_KEY;
     const secretKey = process.env.SUBNOTO_SECRET_KEY;
     const workspaceUuid = process.env.WORKSPACE_UUID;
-    if (!apiBaseUrl || !accessKey || !secretKey || !workspaceUuid) {
+    if (!accessKey || !secretKey) {
         return {
-            error: "Missing env: SUBNOTO_BASE_URL, SUBNOTO_ACCESS_KEY, SUBNOTO_SECRET_KEY, WORKSPACE_UUID",
+            error: "Missing env: SUBNOTO_ACCESS_KEY, SUBNOTO_SECRET_KEY",
         };
     }
     const client = new SubnotoClient({
-        apiBaseUrl,
+        ...(apiBaseUrl && { apiBaseUrl }),
         accessKey,
         secretKey,
         unattested: process.env.SUBNOTO_UNATTESTED === "true",
     });
-    return { client, workspaceUuid, baseUrl: apiBaseUrl };
+    return { client, ...(workspaceUuid && { workspaceUuid }) };
 }

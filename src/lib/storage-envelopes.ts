@@ -6,20 +6,24 @@ export type SavedEnvelope = {
     signerEmail?: string;
 };
 
+function isSavedEnvelope(e: unknown): e is SavedEnvelope {
+    if (e == null || typeof e !== "object") return false;
+    const o = e as Record<string, unknown>;
+    return (
+        typeof o.envelopeUuid === "string" &&
+        typeof o.createdAt === "number" &&
+        (o.signerEmail === undefined || typeof o.signerEmail === "string")
+    );
+}
+
 export function loadSavedEnvelopes(): SavedEnvelope[] {
     if (typeof window === "undefined") return [];
     try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return [];
-        const parsed = JSON.parse(raw) as unknown;
+        const parsed: unknown = JSON.parse(raw);
         if (!Array.isArray(parsed)) return [];
-        return parsed.filter(
-            (e): e is SavedEnvelope =>
-                e != null &&
-                typeof e === "object" &&
-                typeof (e as SavedEnvelope).envelopeUuid === "string" &&
-                typeof (e as SavedEnvelope).createdAt === "number"
-        );
+        return parsed.filter(isSavedEnvelope);
     } catch {
         return [];
     }

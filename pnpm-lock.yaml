@@ -16,11 +16,11 @@ importers:
         specifier: ^4.3.2
         version: 4.3.2(react@19.2.4)
       '@subnoto/api-client':
-        specifier: ^2.9.8
-        version: 2.9.8
+        specifier: ^2.11.0
+        version: 2.11.0
       '@subnoto/embed-react':
-        specifier: ^2.9.8
-        version: 2.9.8(react@19.2.4)
+        specifier: ^2.11.0
+        version: 2.11.0(react@19.2.4)
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -591,11 +591,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@subnoto/api-client@2.9.8':
-    resolution: {integrity: sha512-GXJ0WrVkALCHCUMB+QY7deOGW9i4gNFWw9pokd1agJ7EKkUKWQPyS7oxPclIRWEnCHLDJSPAWWtF1+nbGNECqQ==}
+  '@subnoto/api-client@2.11.0':
+    resolution: {integrity: sha512-oG8L+UiwG98J+ELg3eWYhIeCq3SLhQ7lWwd0moZqah6ioBafzIKcmD4feT+O4dizALKjwy24rj365wfYNbckhA==}
 
-  '@subnoto/embed-react@2.9.8':
-    resolution: {integrity: sha512-G1wmF7tWPsmFOtbLJ3awgkuS2R6/74k1vLZzeJr/4owBTcZxJSs1ziT+Tt+PcZqXs29EzHLb4w6u8j4MkfJjtQ==}
+  '@subnoto/embed-react@2.11.0':
+    resolution: {integrity: sha512-U4Y8kzMbD3MJGzNDmwRfPl8zXLdgHMGTixabCnf9zg5K2mMDZFPwd7Xt02wjY11+n7AdBSe5ar/QKZ9Pjegpew==}
     peerDependencies:
       react: '>=17.0.0'
 
@@ -2655,12 +2655,12 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.59.0':
     optional: true
 
-  '@subnoto/api-client@2.9.8':
+  '@subnoto/api-client@2.11.0':
     dependencies:
       openapi-fetch: 0.17.0
       tough-cookie: 6.0.0
 
-  '@subnoto/embed-react@2.9.8(react@19.2.4)':
+  '@subnoto/embed-react@2.11.0(react@19.2.4)':
     dependencies:
       react: 19.2.4
 

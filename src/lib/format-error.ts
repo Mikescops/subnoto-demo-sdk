@@ -1,6 +1,16 @@
-import { SubnotoError } from "@subnoto/api-client";
+import {
+    SubnotoError,
+    getErrorMessage as sdkGetErrorMessage,
+    isTunnelError,
+} from "@subnoto/api-client";
 
-export function formatEnvelopeError(err: unknown, apiBaseUrl: string): string {
+const DEFAULT_API_BASE_URL = "https://enclave.subnoto.com";
+
+function hasCode(x: unknown): x is { code?: string } {
+    return typeof x === "object" && x !== null && "code" in x;
+}
+
+export function formatEnvelopeError(err: unknown, apiBaseUrl: string = DEFAULT_API_BASE_URL): string {
     if (err instanceof SubnotoError) {
         if (/no session id/i.test(err.message)) {
             const hint =
@@ -9,15 +19,27 @@ export function formatEnvelopeError(err: unknown, apiBaseUrl: string): string {
                     : "";
             return `Subnoto API handshake failed: ${err.message}.${hint}`;
         }
-        return err.message;
+        const tunnelNote =
+            err.code && isTunnelError({ code: err.code })
+                ? " Tunnel error (SDK already retried up to 3 times)."
+                : "";
+        return `${err.message}${tunnelNote}`;
     }
     if (err instanceof Error) {
-        const cause = (err as Error & { cause?: unknown }).cause;
-        const code = cause && typeof cause === "object" && "code" in cause ? (cause as { code?: string }).code : null;
+        const cause = err.cause;
+        const code = hasCode(cause) ? cause.code : undefined;
         if (err.message.includes("fetch failed") || code === "ECONNREFUSED") {
             return `Cannot reach Subnoto API at ${apiBaseUrl}. Check that the API or tunnel is running (e.g. start the api-proxy or use the cloud URL such as https://enclave.subnoto.com).`;
+        }
+        if (cause != null && typeof cause === "object") {
+            return sdkGetErrorMessage(cause);
         }
         return err.message;
     }
     return "Unknown error creating envelope";
+}
+
+/** Get a user-facing message from an API error payload (e.g. result.error from client.POST). */
+export function messageFromApiError(error: unknown): string {
+    return sdkGetErrorMessage(error);
 }

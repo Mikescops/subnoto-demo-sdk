@@ -1,6 +1,9 @@
 "use server";
 
+import { getErrorMessage } from "@subnoto/api-client";
 import { getClientAndWorkspace } from "../lib/subnoto-client.js";
+
+const DEFAULT_API_BASE_URL = "https://enclave.subnoto.com";
 
 export type WhoamiResult =
     | {
@@ -16,23 +19,18 @@ export type WhoamiResult =
 export async function getWhoami(): Promise<WhoamiResult> {
     const ctx = getClientAndWorkspace();
     if ("error" in ctx) return { error: ctx.error };
-    const { client, baseUrl } = ctx;
+    const { client } = ctx;
+    const apiBaseUrl = process.env.SUBNOTO_BASE_URL ?? DEFAULT_API_BASE_URL;
     try {
         const { data, error } = await client.POST("/public/utils/whoami", {
             body: {},
         });
         if (error || !data) {
-            const msg =
-                error && typeof error === "object" && error !== null
-                    ? ((error as { error?: { message?: string } }).error?.message ??
-                      (error as { message?: string }).message)
-                    : error != null
-                      ? String(error)
-                      : "Failed to get whoami";
+            const msg = error != null ? getErrorMessage(error) : "Failed to get whoami";
             return { error: msg ?? "Failed to get whoami" };
         }
         return {
-            apiBaseUrl: baseUrl,
+            apiBaseUrl,
             teamUuid: data.teamUuid,
             teamName: data.teamName,
             ownerEmail: data.ownerEmail,

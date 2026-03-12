@@ -1,6 +1,6 @@
 "use server";
 
-import type { UploadDocumentOptions } from "@subnoto/api-client";
+import { getErrorMessage, type UploadDocumentOptions } from "@subnoto/api-client";
 import { getClientAndWorkspace } from "../lib/subnoto-client.js";
 import { EMBED_BASE_URL } from "../lib/embed-url.js";
 import { formatEnvelopeError } from "../lib/format-error.js";
@@ -21,7 +21,7 @@ export async function createEnvelopeFromDevisPdf(
 ): Promise<CreateEnvelopeFromDevisPdfResult> {
     const ctx = getClientAndWorkspace();
     if ("error" in ctx) return { error: ctx.error };
-    const { client, workspaceUuid, baseUrl } = ctx;
+    const { client, workspaceUuid } = ctx;
 
     let pdfBuffer: Buffer;
     try {
@@ -32,17 +32,16 @@ export async function createEnvelopeFromDevisPdf(
 
     try {
         const uploadOptions: UploadDocumentOptions = {
-            workspaceUuid,
+            ...(workspaceUuid && { workspaceUuid }),
             fileBuffer: pdfBuffer,
             envelopeTitle,
             detectSmartAnchors: "true",
         };
         const { envelopeUuid } = await client.uploadDocument(uploadOptions);
 
-        const post = client as { POST: (path: string, opts: { body: object }) => Promise<{ error: unknown }> };
-        const { error: updateRecipientError } = await post.POST("/public/envelope/update-recipient", {
+        const { error: updateRecipientError } = await client.POST("/public/envelope/update-recipient", {
             body: {
-                workspaceUuid,
+                ...(workspaceUuid && { workspaceUuid }),
                 envelopeUuid,
                 email: signerEmail,
                 role: "signer",
@@ -52,45 +51,29 @@ export async function createEnvelopeFromDevisPdf(
             },
         });
         if (updateRecipientError) {
-            const msg =
-                typeof updateRecipientError === "object" && updateRecipientError !== null
-                    ? ((updateRecipientError as { error?: { message?: string } }).error?.message ??
-                      (updateRecipientError as { message?: string }).message)
-                    : String(updateRecipientError);
-            return { error: msg ?? "Failed to update recipient" };
+            return { error: getErrorMessage(updateRecipientError) || "Failed to update recipient" };
         }
 
         const { error: sendError } = await client.POST("/public/envelope/send", {
             body: {
-                workspaceUuid,
+                ...(workspaceUuid && { workspaceUuid }),
                 envelopeUuid,
                 distributionMethod: "none",
             },
         });
         if (sendError) {
-            const msg =
-                typeof sendError === "object" && sendError !== null
-                    ? ((sendError as { error?: { message?: string } }).error?.message ??
-                      (sendError as { message?: string }).message)
-                    : String(sendError);
-            return { error: msg ?? "Failed to send envelope" };
+            return { error: getErrorMessage(sendError) || "Failed to send envelope" };
         }
 
         const { data: tokenData, error: tokenError } = await client.POST("/public/authentication/create-iframe-token", {
             body: {
-                workspaceUuid,
+                ...(workspaceUuid && { workspaceUuid }),
                 envelopeUuid,
                 signerEmail,
             },
         });
         if (tokenError || !tokenData?.iframeToken) {
-            const msg =
-                tokenError && typeof tokenError === "object" && tokenError !== null
-                    ? ((tokenError as { error?: { message?: string } }).error?.message ??
-                      (tokenError as { message?: string }).message)
-                    : tokenError != null
-                      ? String(tokenError)
-                      : "Failed to create iframe token";
+            const msg = tokenError != null ? getErrorMessage(tokenError) : "Failed to create iframe token";
             return { error: msg ?? "Failed to create iframe token" };
         }
 
@@ -98,7 +81,7 @@ export async function createEnvelopeFromDevisPdf(
         return { envelopeUuid, iframeToken, host: EMBED_BASE_URL };
     } catch (err) {
         return {
-            error: formatEnvelopeError(err, baseUrl),
+            error: formatEnvelopeError(err),
         };
     }
 }
