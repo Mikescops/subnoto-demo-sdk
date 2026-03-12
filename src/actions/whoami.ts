@@ -44,10 +44,3 @@ export async function getWhoami(): Promise<WhoamiResult> {
         };
     }
 }
-
-/** Returns the API key owner email from the whoami endpoint. Use as signer email for demos. */
-export async function getOwnerEmail(): Promise<{ email: string } | { error: string }> {
-    const whoami = await getWhoami();
-    if ("error" in whoami) return { error: whoami.error };
-    return { email: whoami.ownerEmail };
-}

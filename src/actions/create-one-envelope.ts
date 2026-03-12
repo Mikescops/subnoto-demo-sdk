@@ -7,11 +7,11 @@ import { getClientAndWorkspace } from "../lib/subnoto-client.js";
 import { getProjectRoot } from "../lib/env.js";
 import { EMBED_BASE_URL } from "../lib/embed-url.js";
 import { formatEnvelopeError } from "../lib/format-error.js";
-import { getOwnerEmail } from "./whoami.js";
+import { getWhoami } from "./whoami.js";
 
 export type CreateEnvelopeFromBufferResult = { envelopeUuid: string; documentUuid: string } | { error: string };
 
-/** Creates one envelope from a buffer: upload, add recipients, add signature block, send. signerEmail is the API key owner email (e.g. from getOwnerEmail). */
+/** Creates one envelope from a buffer: upload, add recipients, add signature block, send. signerEmail is the API key owner email (e.g. from getWhoami().ownerEmail). */
 export async function createEnvelopeFromBuffer(
     client: SubnotoClient,
     workspaceUuid: string | undefined,
@@ -93,9 +93,9 @@ export async function createEnvelopeAndEmbed(envelopeTitle = "Mass upload signin
     if ("error" in ctx) return { error: ctx.error };
     const { client, workspaceUuid } = ctx;
 
-    const owner = await getOwnerEmail();
-    if ("error" in owner) return { error: owner.error };
-    const signerEmail = owner.email;
+    const whoami = await getWhoami();
+    if ("error" in whoami) return { error: whoami.error };
+    const signerEmail = whoami.ownerEmail;
 
     const pdfPath = join(getProjectRoot(), "assets", "sample-multipage.pdf");
     if (!existsSync(pdfPath)) {

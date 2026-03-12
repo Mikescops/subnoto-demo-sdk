@@ -38,8 +38,3 @@ export function formatEnvelopeError(err: unknown, apiBaseUrl: string = DEFAULT_A
     }
     return "Unknown error creating envelope";
 }
-
-/** Get a user-facing message from an API error payload (e.g. result.error from client.POST). */
-export function messageFromApiError(error: unknown): string {
-    return sdkGetErrorMessage(error);
-}

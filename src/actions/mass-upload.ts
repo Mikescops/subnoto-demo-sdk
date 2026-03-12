@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { getClientAndWorkspace } from "../lib/subnoto-client.js";
 import { getProjectRoot } from "../lib/env.js";
 import { createEnvelopeFromBuffer } from "./create-one-envelope.js";
-import { getOwnerEmail } from "./whoami.js";
+import { getWhoami } from "./whoami.js";
 
 const TITLE_PARTS = [
     ["Q4 2024", "Q1 2025", "FY2024", "H2 2024", "January 2025", "Board"],
@@ -35,9 +35,9 @@ export async function runMassUpload(options: { count: number; delayMs: number })
         return { error: "Missing assets/sample-multipage.pdf. Add it to the assets folder." };
     }
 
-    const owner = await getOwnerEmail();
-    if ("error" in owner) return { error: owner.error };
-    const signerEmail = owner.email;
+    const whoami = await getWhoami();
+    if ("error" in whoami) return { error: whoami.error };
+    const signerEmail = whoami.ownerEmail;
 
     const fileBuffer = readFileSync(pdfPath);
     const results: MassUploadItem[] = [];

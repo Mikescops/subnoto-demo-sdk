@@ -3,7 +3,7 @@
 import { getErrorMessage } from "@subnoto/api-client";
 import { getClientAndWorkspace } from "../lib/subnoto-client.js";
 import { EMBED_BASE_URL } from "../lib/embed-url.js";
-import { getOwnerEmail } from "./whoami.js";
+import { getWhoami } from "./whoami.js";
 
 export type GetIframeTokenResult = { iframeToken: string; host: string } | { error: string };
 
@@ -16,9 +16,9 @@ export async function getIframeUrlForEnvelope(
     const { client, workspaceUuid } = ctx;
     let email = signerEmail;
     if (!email) {
-        const owner = await getOwnerEmail();
-        if ("error" in owner) return { error: owner.error };
-        email = owner.email;
+        const whoami = await getWhoami();
+        if ("error" in whoami) return { error: whoami.error };
+        email = whoami.ownerEmail;
     }
     try {
         const { data: tokenData, error: tokenError } = await client.POST("/public/authentication/create-iframe-token", {

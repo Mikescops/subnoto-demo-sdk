@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { pdf } from "@react-pdf/renderer";
 import { createEnvelopeFromDevisPdf } from "../actions/create-devis-envelope.js";
-import { getOwnerEmail } from "../actions/whoami.js";
+import { getWhoami } from "../actions/whoami.js";
 import { saveEnvelope } from "../lib/storage-envelopes.js";
 import { SigningIframe } from "./signing-iframe.js";
 import { DevisPdfDocument } from "./devis-pdf-document.js";
@@ -114,8 +114,8 @@ export function DevisDemo() {
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
-        getOwnerEmail().then((r) => {
-            const email = "error" in r ? "" : r.email;
+        getWhoami().then((r) => {
+            const email = "error" in r ? "" : r.ownerEmail;
             setData(defaultFormData(email));
         });
     }, []);
