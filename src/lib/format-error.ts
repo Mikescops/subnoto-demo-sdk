@@ -1,8 +1,4 @@
-import {
-    SubnotoError,
-    getErrorMessage as sdkGetErrorMessage,
-    isTunnelError,
-} from "@subnoto/api-client";
+import { SubnotoError, getErrorMessage as sdkGetErrorMessage, isTunnelError } from "@subnoto/api-client";
 
 const DEFAULT_API_BASE_URL = "https://enclave.subnoto.com";
 
@@ -20,9 +16,7 @@ export function formatEnvelopeError(err: unknown, apiBaseUrl: string = DEFAULT_A
             return `Subnoto API handshake failed: ${err.message}.${hint}`;
         }
         const tunnelNote =
-            err.code && isTunnelError({ code: err.code })
-                ? " Tunnel error (SDK already retried up to 3 times)."
-                : "";
+            err.code && isTunnelError({ code: err.code }) ? " Tunnel error (SDK already retried up to 3 times)." : "";
         return `${err.message}${tunnelNote}`;
     }
     if (err instanceof Error) {

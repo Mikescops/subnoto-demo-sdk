@@ -3,15 +3,7 @@
 import { getErrorMessage } from "@subnoto/api-client";
 import { getClientAndWorkspace } from "../lib/subnoto-client.js";
 
-const ENVELOPE_STATUSES = [
-    "uploading",
-    "draft",
-    "approving",
-    "signing",
-    "complete",
-    "declined",
-    "canceled",
-] as const;
+const ENVELOPE_STATUSES = ["uploading", "draft", "approving", "signing", "complete", "declined", "canceled"] as const;
 
 export type EnvelopeStatus = (typeof ENVELOPE_STATUSES)[number];
 

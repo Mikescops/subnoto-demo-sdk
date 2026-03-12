@@ -16,7 +16,7 @@
 
 2. **Environment variables**
 
-    Copy `.env.example` to `.env` in the project root and fill in your credentials. All variable names and optional ones are listed in `.env.example`.     Required:
+    Copy `.env.example` to `.env` in the project root and fill in your credentials. All variable names and optional ones are listed in `.env.example`. Required:
     - `SUBNOTO_ACCESS_KEY`: API access key
     - `SUBNOTO_SECRET_KEY`: API secret key
 
