@@ -2,7 +2,7 @@ import { MassUploadPanel } from "../components/mass-upload-panel";
 
 export default async function MassUploadPage() {
     return (
-        <div className="min-h-[calc(100vh-7rem)]">
+        <div className="h-full">
             <MassUploadPanel />
         </div>
     );

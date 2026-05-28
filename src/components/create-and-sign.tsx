@@ -113,7 +113,7 @@ export const CreateAndSign = () => {
     };
 
     return (
-        <div className="flex h-[calc(100vh-7rem)] flex-col">
+        <div className="flex h-full flex-col">
             {!iframeToken ? (
                 <CreateEnvelopeCard
                     loading={loading}

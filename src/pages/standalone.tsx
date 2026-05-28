@@ -1,6 +1,6 @@
 export default async function StandalonePage() {
     return (
-        <div className="min-h-[calc(100vh-7rem)] p-4 sm:p-6">
+        <div className="min-h-full p-4 sm:p-6">
             <div className="mx-auto max-w-2xl space-y-6">
                 <div className="rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-elevated))] p-6 shadow-sm">
                     <h2 className="text-xl font-semibold tracking-tight text-[rgb(var(--color-text))]">

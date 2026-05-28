@@ -12,6 +12,8 @@ import type { getConfig as File_Index_getConfig } from './pages/index';
 // prettier-ignore
 import type { getConfig as File_MassUpload_getConfig } from './pages/mass-upload';
 // prettier-ignore
+import type { getConfig as File_RentContract_getConfig } from './pages/rent-contract';
+// prettier-ignore
 import type { getConfig as File_Standalone_getConfig } from './pages/standalone';
 
 // prettier-ignore
@@ -20,6 +22,7 @@ type Page =
 | ({ path: '/devis' } & GetConfigResponse<typeof File_Devis_getConfig>)
 | ({ path: '/' } & GetConfigResponse<typeof File_Index_getConfig>)
 | ({ path: '/mass-upload' } & GetConfigResponse<typeof File_MassUpload_getConfig>)
+| ({ path: '/rent-contract' } & GetConfigResponse<typeof File_RentContract_getConfig>)
 | ({ path: '/standalone' } & GetConfigResponse<typeof File_Standalone_getConfig>);
 
 // prettier-ignore

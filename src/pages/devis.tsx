@@ -2,7 +2,7 @@ import { DevisDemo } from "../components/devis-demo";
 
 export default async function DevisPage() {
     return (
-        <div className="min-h-[calc(100vh-7rem)]">
+        <div className="h-full">
             <DevisDemo />
         </div>
     );

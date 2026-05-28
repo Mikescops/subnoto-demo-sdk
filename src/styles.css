@@ -2,15 +2,23 @@
 
 /* Theme tokens for consistent look and easy rebranding */
 :root {
-    --color-primary: 37 99 235; /* blue-600 */
-    --color-primary-hover: 29 78 216; /* blue-700 */
-    --color-surface: 248 250 252; /* slate-50 */
+    --color-primary: 37 99 235;        /* blue-600 */
+    --color-primary-hover: 29 78 216;  /* blue-700 */
+
+    --color-shell-bg: 248 250 252;     /* slate-50 */
+    --color-shell-header: 255 255 255;
+    --color-shell-border: 226 232 240; /* slate-200 */
+    --color-shell-text: 15 23 42;      /* slate-900 */
+    --color-shell-text-muted: 71 85 105; /* slate-600 */
+    --color-shell-link-hover: 241 245 249; /* slate-100 */
+
+    --color-surface: 248 250 252;
     --color-surface-elevated: 255 255 255;
-    --color-text: 15 23 42; /* slate-900 */
-    --color-text-muted: 71 85 105; /* slate-600 */
-    --color-border: 226 232 240; /* slate-200 */
-    --color-error: 185 28 28; /* red-800 */
-    --color-error-bg: 254 226 226; /* red-100 */
+    --color-text: 15 23 42;
+    --color-text-muted: 71 85 105;
+    --color-border: 226 232 240;
+    --color-error: 185 28 28;
+    --color-error-bg: 254 226 226;
 }
 
 /* Typography: professional system stack (no external font required) */

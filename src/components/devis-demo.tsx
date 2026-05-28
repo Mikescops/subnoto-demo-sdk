@@ -274,7 +274,7 @@ export function DevisDemo() {
 
     if (iframeToken && envelopeUuid) {
         return (
-            <div className="flex h-[calc(100vh-7rem)] flex-col">
+            <div className="flex h-full flex-col">
                 <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-elevated))] px-4 py-2.5">
                     <button
                         type="button"
@@ -313,7 +313,7 @@ export function DevisDemo() {
     }
 
     return (
-        <div className="flex h-[calc(100vh-7rem)] flex-col gap-4 p-4 lg:flex-row">
+        <div className="flex h-full flex-col gap-4 p-4 lg:flex-row">
             <div className="flex min-w-0 flex-1 flex-col gap-4 overflow-auto lg:max-w-md">
                 <div className="rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-elevated))] p-4 shadow-sm">
                     <h2 className="text-lg font-semibold tracking-tight text-[rgb(var(--color-text))]">Quote</h2>

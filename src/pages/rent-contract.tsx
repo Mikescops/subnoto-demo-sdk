@@ -1,9 +1,9 @@
-import { CreateAndSign } from "../components/create-and-sign.js";
+import { RentContractDemo } from "../components/rent-contract-demo";
 
-export default async function CreateAndSignPage() {
+export default async function RentContractPage() {
     return (
         <div className="h-full">
-            <CreateAndSign />
+            <RentContractDemo />
         </div>
     );
 }

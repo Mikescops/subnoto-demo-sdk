@@ -22,6 +22,13 @@ export default async function HomePage() {
             icon: "📄",
         },
         {
+            href: "/rent-contract",
+            title: "Rent contract",
+            description:
+                "Generate a residential rental agreement from a form, send for signature, and preview the signing experience inside a mobile phone frame. Switch device presets to test different screen sizes.",
+            icon: "🏠",
+        },
+        {
             href: "/standalone",
             title: "Standalone iframe",
             description:
@@ -31,7 +38,7 @@ export default async function HomePage() {
     ];
 
     return (
-        <div className="min-h-[calc(100vh-7rem)] p-4 sm:p-6 lg:p-8">
+        <div className="min-h-full p-4 sm:p-6 lg:p-8">
             <div className="mx-auto max-w-5xl">
                 <header className="mb-10">
                     <h1 className="text-2xl font-bold tracking-tight text-[rgb(var(--color-text))] sm:text-3xl">
