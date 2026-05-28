@@ -20,15 +20,13 @@ export const CreateAndSign = () => {
     const [copied, setCopied] = useState(false);
     const [signedMessage, setSignedMessage] = useState<string | null>(null);
     const [savedUnsigned, setSavedUnsigned] = useState<EnvelopeListItem[]>([]);
-    const [loadingSaved, setLoadingSaved] = useState(true);
-    const [hasSavedEnvelopes, setHasSavedEnvelopes] = useState(false);
+    const [loadingSaved, setLoadingSaved] = useState(() => loadSavedEnvelopes().length > 0);
+    const [hasSavedEnvelopes] = useState(() => loadSavedEnvelopes().length > 0);
     const [openingUuid, setOpeningUuid] = useState<string | null>(null);
 
     useEffect(() => {
         const list = loadSavedEnvelopes();
-        setHasSavedEnvelopes(list.length > 0);
         if (list.length === 0) {
-            setLoadingSaved(false);
             return;
         }
         let cancelled = false;

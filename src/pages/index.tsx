@@ -4,20 +4,21 @@ export default async function HomePage() {
             href: "/create-and-sign",
             title: "Create & Sign",
             description:
-                "Create one envelope from a sample PDF, add recipient and signature block, send with no email, and open the signing experience in an iframe. Reopen saved unsigned envelopes.",
+                "Create one envelope from a sample PDF, add recipient and signature block, send with no email, and open the signing experience in an iframe. Reopen saved unsigned envelopes. In sandbox mode no credits are consumed and no invitation emails are sent.",
             icon: "✉️",
         },
         {
             href: "/mass-upload",
             title: "Mass upload",
-            description: "Create many envelopes in one run (same PDF, random titles), then open any in the iframe.",
+            description:
+                "Create many envelopes in one run (same PDF, random titles), then open any in the iframe. Use sandbox mode to batch-create without consuming credits.",
             icon: "📦",
         },
         {
             href: "/devis",
             title: "Devis",
             description:
-                "Build a quote PDF from a form with live preview. Send for signature using Smart Anchors—recipient and signature block are detected from the PDF.",
+                "Build a quote PDF from a form with live preview. Send for signature using Smart Anchors—recipient and signature block are detected from the PDF. In sandbox mode the signature uses a development certificate.",
             icon: "📄",
         },
         {

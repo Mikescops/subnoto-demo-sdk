@@ -14,31 +14,31 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
-        "@react-pdf/renderer": "^4.3.2",
-        "@subnoto/api-client": "^2.11.0",
-        "@subnoto/embed-react": "^2.11.0",
-        "dotenv": "^17.3.1",
-        "react": "~19.2.4",
-        "react-dom": "~19.2.4",
-        "react-server-dom-webpack": "~19.2.4",
-        "waku": "1.0.0-alpha.5"
+        "@react-pdf/renderer": "^4.5.1",
+        "@subnoto/api-client": "^2.15.6",
+        "@subnoto/embed-react": "^2.15.6",
+        "dotenv": "^17.4.2",
+        "react": "~19.2.6",
+        "react-dom": "~19.2.6",
+        "react-server-dom-webpack": "~19.2.6",
+        "waku": "1.0.0-beta.1"
     },
     "devDependencies": {
-        "@eslint/compat": "^2.0.3",
+        "@eslint/compat": "^2.1.0",
         "@eslint/js": "^10.0.1",
-        "@tailwindcss/vite": "^4.2.1",
-        "@types/react": "^19.2.14",
+        "@tailwindcss/vite": "^4.3.0",
+        "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
-        "@vitejs/plugin-react": "^5.1.4",
+        "@vitejs/plugin-react": "^6.0.2",
         "babel-plugin-react-compiler": "^1.0.0",
-        "eslint": "^10.0.3",
+        "eslint": "^10.4.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-react": "^7.37.5",
-        "eslint-plugin-react-hooks": "^7.0.1",
-        "prettier": "^3.8.1",
-        "tailwindcss": "^4.2.1",
-        "typescript": "^5.9.3",
-        "typescript-eslint": "^8.57.0"
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "prettier": "^3.8.3",
+        "tailwindcss": "^4.3.0",
+        "typescript": "^6.0.3",
+        "typescript-eslint": "^8.60.0"
     },
     "pnpm": {
         "overrides": {

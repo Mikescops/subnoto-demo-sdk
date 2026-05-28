@@ -7,6 +7,7 @@ import { getWhoami } from "../actions/whoami.js";
 import { saveEnvelope } from "../lib/storage-envelopes.js";
 import { SigningIframe } from "./signing-iframe.js";
 import { DevisPdfDocument } from "./devis-pdf-document.js";
+import { SellingPolicyPdfDocument } from "./selling-policy-pdf-document.js";
 import type { DevisFormData, DevisLineItem } from "./devis-types.js";
 
 const DEBOUNCE_MS = 500;
@@ -228,8 +229,13 @@ export function DevisDemo() {
             }
             const buffer = await blob.arrayBuffer();
             const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+
+            const sellingPolicyBlob = await pdf(<SellingPolicyPdfDocument />).toBlob();
+            const sellingPolicyBuffer = await sellingPolicyBlob.arrayBuffer();
+            const sellingPolicyBase64 = btoa(String.fromCharCode(...new Uint8Array(sellingPolicyBuffer)));
+
             const title = `Quote – ${data.clientName || data.quoteNumber}`;
-            const result = await createEnvelopeFromDevisPdf(base64, title, data.signerEmail);
+            const result = await createEnvelopeFromDevisPdf(base64, title, data.signerEmail, sellingPolicyBase64);
             if ("error" in result) {
                 setError(result.error);
                 return;

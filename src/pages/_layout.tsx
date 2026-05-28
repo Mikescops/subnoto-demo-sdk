@@ -1,11 +1,14 @@
 import "../styles.css";
 import type { ReactNode } from "react";
 import { getWhoami } from "../actions/whoami.js";
+import { getWorkspaceSandboxStatus } from "../actions/workspace-sandbox.js";
+import { WorkspaceSandboxEditor } from "../components/workspace-sandbox-editor.js";
 
 type RootLayoutProps = { children: ReactNode };
 
 export default async function RootLayout({ children }: RootLayoutProps) {
     const whoami = await getWhoami();
+    const sandboxStatus = await getWorkspaceSandboxStatus();
 
     return (
         <html lang="en">
@@ -86,6 +89,18 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                                 <strong className="text-[rgb(var(--color-text))]">Key:</strong>{" "}
                                 <code className="rounded bg-slate-100 px-1">{whoami.accessKey}</code>
                             </span>
+                            {"error" in sandboxStatus ? (
+                                <span title={sandboxStatus.error}>
+                                    <strong className="text-[rgb(var(--color-text))]">Sandbox:</strong>{" "}
+                                    <span className="text-amber-600">{sandboxStatus.error}</span>
+                                </span>
+                            ) : (
+                                <WorkspaceSandboxEditor
+                                    sandbox={sandboxStatus.sandbox}
+                                    workspaceUuid={sandboxStatus.workspaceUuid}
+                                    workspaceName={sandboxStatus.workspaceName}
+                                />
+                            )}
                         </div>
                     )}
                 </header>

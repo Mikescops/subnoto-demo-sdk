@@ -17,7 +17,8 @@ export type CreateEnvelopeFromDevisPdfResult =
 export async function createEnvelopeFromDevisPdf(
     pdfBase64: string,
     envelopeTitle: string,
-    signerEmail: string
+    signerEmail: string,
+    sellingPolicyBase64: string
 ): Promise<CreateEnvelopeFromDevisPdfResult> {
     const ctx = getClientAndWorkspace();
     if ("error" in ctx) return { error: ctx.error };
@@ -37,7 +38,7 @@ export async function createEnvelopeFromDevisPdf(
             envelopeTitle,
             detectSmartAnchors: "true",
         };
-        const { envelopeUuid } = await client.uploadDocument(uploadOptions);
+        const { envelopeUuid, documentUuid: devisDocumentUuid } = await client.uploadDocument(uploadOptions);
 
         const { error: updateRecipientError } = await client.POST("/public/envelope/update-recipient", {
             body: {
@@ -52,6 +53,81 @@ export async function createEnvelopeFromDevisPdf(
         });
         if (updateRecipientError) {
             return { error: getErrorMessage(updateRecipientError) || "Failed to update recipient" };
+        }
+
+        // Attach the selling policy (generated client-side) as a second signable document
+        const sellingPolicyBuffer = Buffer.from(sellingPolicyBase64, "base64");
+        const sellingPolicyBlob = new Blob([sellingPolicyBuffer], { type: "application/pdf" });
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: addDocData, error: addDocError } = (await (client.POST as any)(
+            "/public/envelope/add-document",
+            {
+                body: {
+                    ...(workspaceUuid && { workspaceUuid }),
+                    envelopeUuid,
+                    documentTitle: "General Terms and Conditions of Sale",
+                    file: sellingPolicyBlob,
+                },
+                bodySerializer: (body: {
+                    workspaceUuid?: string;
+                    envelopeUuid: string;
+                    documentTitle: string;
+                    file: Blob;
+                }) => {
+                    const form = new FormData();
+                    if (body.workspaceUuid) form.append("workspaceUuid", body.workspaceUuid);
+                    form.append("envelopeUuid", body.envelopeUuid);
+                    form.append("documentTitle", body.documentTitle);
+                    form.append("file", body.file, "selling-policy.pdf");
+                    return form;
+                },
+            }
+        )) as { data?: { documentUuid: string; revisionEncryptionKey: string }; error?: unknown };
+
+        if (addDocError || !addDocData?.documentUuid) {
+            return { error: getErrorMessage(addDocError) || "Failed to add selling policy document" };
+        }
+
+        // Add a signature block to the selling policy at the bottom of page 1
+        // A4 page is 595×842 pt; with 40 pt padding the signature sits near y=730 from top
+        const { error: addBlocksError } = await client.POST("/public/envelope/add-blocks", {
+            body: {
+                ...(workspaceUuid && { workspaceUuid }),
+                envelopeUuid,
+                documentUuid: addDocData.documentUuid,
+                blocks: [
+                    {
+                        type: "signature",
+                        page: "1",
+                        x: 40,
+                        y: 730,
+                        width: 200,
+                        height: 60,
+                        recipientEmail: signerEmail,
+                    },
+                ],
+            },
+        });
+        if (addBlocksError) {
+            return { error: getErrorMessage(addBlocksError) || "Failed to add signature block to selling policy" };
+        }
+
+        // Require the signer to scroll through all pages on both documents before signing
+        const { error: updateDocError } = await client.POST("/public/envelope/update", {
+            body: {
+                ...(workspaceUuid && { workspaceUuid }),
+                envelopeUuid,
+                update: {
+                    documents: [
+                        { uuid: devisDocumentUuid, mustReadAllPages: true },
+                        { uuid: addDocData.documentUuid, mustReadAllPages: true },
+                    ],
+                },
+            },
+        });
+        if (updateDocError) {
+            return { error: getErrorMessage(updateDocError) || "Failed to enable mustReadAllPages on selling policy" };
         }
 
         const { error: sendError } = await client.POST("/public/envelope/send", {
